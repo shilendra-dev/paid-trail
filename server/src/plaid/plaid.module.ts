@@ -4,6 +4,6 @@ import { PlaidService } from './plaid.service';
 
 @Module({
   controllers: [PlaidController],
-  providers: [PlaidService]
+  providers: [PlaidService],
 })
 export class PlaidModule {}
