@@ -7,6 +7,7 @@ export class PlaidController {
 
   @Get('create_link_token')
   async createLinkToken() {
+    console.log('Creating link token...');
     const link_token = await this.plaidService.createLinkToken();
     return { link_token };
   }

@@ -1,35 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import { usePlaidLink } from "react-plaid-link";
+import api from "./lib/axios";
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const fetchLinkToken = async () => {
+      console.log("Fetching link token...");
+      try {
+        const response = await api.get("/plaid/create_link_token");
+        console.log("Link token response:", response.data);
+        setToken(response.data.link_token);
+      } catch (error) {
+        console.error("Error fetching link token:", error);
+      }
+    };
+
+    fetchLinkToken();
+  }, []);
+
+  const { open, ready } = usePlaidLink({
+    token: token || "",
+    onSuccess: (public_token) =>
+      api.post("/api/set_access_token", { public_token }),
+  });
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <button onClick={open} disabled={!ready || !token}>
+      Link Account
+    </button>
+  );
 }
-
-export default App
