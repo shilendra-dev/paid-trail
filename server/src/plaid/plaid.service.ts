@@ -34,7 +34,7 @@ export class PlaidService {
       products: [Products.Auth],
       language: 'en',
       webhook: 'https://www.plaid.com/webhook',
-      redirect_uri: 'https://loacalhost:5173/',
+
       country_codes: [CountryCode.Us],
     };
 
